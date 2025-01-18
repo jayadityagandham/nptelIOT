@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOT NPTEL WEEK-0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #e5e5e5;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #333;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 12px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background-color: #f8f8f8;
+        }
+
+        .option.selected {
+            border-color: #3b82f6;
+        }
+
+        .option.correct {
+            background-color: #ecfdf5;
+        }
+
+        .option.wrong {
+            background-color: #fef2f2;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+        }
+
+        .feedback {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e5e5;
+            display: none;
+        }
+
+        .feedback.visible {
+            display: block;
+        }
+
+        .result-icon {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .result-icon.correct {
+            color: #059669;
+        }
+
+        .result-icon.wrong {
+            color: #dc2626;
+        }
+
+        .explanation {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+        }
+
+        .score {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+
+        .button:hover {
+            background-color: #2563eb;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IOT NPTEL WEEK-0</h1>
+        <div id="quiz-container"></div>
+        <div class="controls">
+            <div id="score" class="score"></div>
+            <button id="submit-btn" class="button">Submit Answers</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                question: "Which of the following allows us to identify objects and extract information?",
+                options: ["RFID", "Sensors", "Actuators", "IoT Nodes"],
+                correctAnswer: 0,
+                explanation: "RFID is a technology that allows us to identify objects and extract information wirelessly."
+            },
+            {
+                id: 2,
+                question: "How many layers does Zigbee consist of?",
+                options: ["1", "2", "3", "4"],
+                correctAnswer: 3,
+                explanation: "Zigbee consists of 4 layers: Application, Network, MAC, and Physical."
+            },
+            {
+                id: 3,
+                question: "Which of the following is not a component of cloud computing?",
+                options: ["Clients", "Local Servers", "Services", "Applications"],
+                correctAnswer: 1,
+                explanation: "Local servers are not a component of cloud computing, which relies on remote servers."
+            },
+            {
+                id: 4,
+                question: "Which of the following is a distance measuring sensor module?",
+                options: ["DHT22", "HC-SR04", "TSL2591", "HC-SR505"],
+                correctAnswer: 1,
+                explanation: "The HC-SR04 is a distance-measuring sensor module that uses ultrasonic waves."
+            },
+            {
+                id: 5,
+                question: "Which of the following is a component in a typical sensor network?",
+                options: ["Sink", "Gateway", "Router", "All of these"],
+                correctAnswer: 3,
+                explanation: "A typical sensor network includes components like Sink, Gateway, and Router."
+            },
+            {
+                id: 6,
+                question: "Which of the following sensors are responsible for measuring orientation and angular velocity?",
+                options: ["Accelerometer", "GPS", "Temperature", "None of these"],
+                correctAnswer: 3,
+                explanation: "None of the listed sensors (Accelerometer, GPS, Temperature) can measure both orientation and angular velocity."
+            },
+            {
+                id: 7,
+                question: '"ISA 100.11A" is a wireless networking technology standard. ISA stands for _______.',
+                options: ["International Society of Automation", "International Society of Advancement", "Industrial Society of Automation", "Industrial Society of Advancement"],
+                correctAnswer: 0,
+                explanation: "ISA stands for International Society of Automation, which sets standards for industrial automation."
+            },
+            {
+                id: 8,
+                question: "Which of the following is not a difference between traditional data center and cloud computing?",
+                options: ["Scalability", "Flexibility", "Elasticity", "Storage"],
+                correctAnswer: 3,
+                explanation: "Storage is not a difference between traditional data centers and cloud computing, as both use storage systems."
+            },
+            {
+                id: 9,
+                question: "Smart grid is also known as the energy internet.",
+                options: ["True", "False"],
+                correctAnswer: 0,
+                explanation: "The smart grid is also known as the energy internet due to its interconnected and intelligent nature."
+            },
+            {
+                id: 10,
+                question: "Can a point of node failure result in the partition of the network in the stationary sensor network?",
+                options: ["Yes", "No"],
+                correctAnswer: 0,
+                explanation: "Yes, a node failure in a stationary sensor network can result in the partition of the network"
+            }
+        ];
+
+        let selectedAnswers = {};
+        let submitted = false;
+
+        function createQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            
+            questions.forEach(question => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                
+                questionCard.innerHTML = `
+                    <div class="question-text">Q${question.id}. ${question.question}</div>
+                    <div class="options-container">
+                        ${question.options.map((option, index) => `
+                            <label class="option" data-question="${question.id}" data-option="${index}">
+                                <input type="radio" name="question${question.id}" value="${index}">
+                                ${option}
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="feedback" id="feedback-${question.id}">
+                        <div class="result-icon">
+                            <span class="icon"></span>
+                            <span class="result-text"></span>
+                        </div>
+                        <div class="explanation">${question.explanation}</div>
+                    </div>
+                `;
+                
+                quizContainer.appendChild(questionCard);
+            });
+
+            // Add event listeners for option selection
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', handleOptionSelect);
+            });
+
+            // Add event listener for submit button
+            document.getElementById('submit-btn').addEventListener('click', handleSubmit);
+        }
+
+        function handleOptionSelect(event) {
+            if (submitted) return;
+
+            const questionId = parseInt(event.currentTarget.dataset.question);
+            const optionIndex = parseInt(event.currentTarget.dataset.option);
+
+            // Update selected answers
+            selectedAnswers[questionId] = optionIndex;
+
+            // Update UI
+            const questionOptions = document.querySelectorAll(`.option[data-question="${questionId}"]`);
+            questionOptions.forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+
+        function handleSubmit() {
+            if (Object.keys(selectedAnswers).length < questions.length) {
+                alert("Please answer all questions before submitting!");
+                return;
+            }
+
+            submitted = true;
+            let score = 0;
+
+            questions.forEach(question => {
+                const isCorrect = selectedAnswers[question.id] === question.correctAnswer;
+                if (isCorrect) score++;
+
+                // Show feedback
+                const feedback = document.getElementById(`feedback-${question.id}`);
+                feedback.classList.add('visible');
+
+                const resultIcon = feedback.querySelector('.result-icon');
+                const resultText = feedback.querySelector('.result-text');
+                
+                if (isCorrect) {
+                    resultIcon.classList.add('correct');
+                    resultText.textContent = 'Correct Answer +1';
+                } else {
+                    resultIcon.classList.add('wrong');
+                    resultText.textContent = 'Wrong Answer +0';
+                }
+
+                // Highlight correct and wrong answers
+                const options = document.querySelectorAll(`.option[data-question="${question.id}"]`);
+                options.forEach((option, index) => {
+                    if (index === question.correctAnswer) {
+                        option.classList.add('correct');
+                    } else if (index === selectedAnswers[question.id]) {
+                        option.classList.add('wrong');
+                    }
+                });
+            });
+
+            // Update score
+            document.getElementById('score').textContent = `Score: ${score}/${questions.length}`;
+
+            // Change submit button to try again
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.textContent = 'Try Again';
+            submitBtn.addEventListener('click', resetQuiz);
+        }
+
+        function resetQuiz() {
+            submitted = false;
+            selectedAnswers = {};
+            
+            // Reset UI
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected', 'correct', 'wrong');
+            });
+            
+            document.querySelectorAll('.feedback').forEach(feedback => {
+                feedback.classList.remove('visible');
+            });
+            
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+            
+            document.getElementById('score').textContent = '';
+            
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.textContent = 'Submit Answers';
+        }
+
+        // Initialize the quiz
+        createQuiz();
+    </script>
+</body>
+</html>
